@@ -169,7 +169,7 @@ class AlphaApplication:
         )
 
         self.popup = AlphaPopup(
-            self
+            self,parent=self.pet
         )
 
         print(
