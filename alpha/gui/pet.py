@@ -1,192 +1,365 @@
-from pathlib import Path
-
 from PySide6.QtCore import Qt, QPoint, Signal
-from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QWidget, QLabel
+from PySide6.QtGui import QPixmap, QPainter
+from PySide6.QtWidgets import QWidget
 
 
 class AlphaPet(QWidget):
-
     clicked = Signal()
-    position_changed = Signal()
+    moved = Signal()
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None, image_path=None):
+        super().__init__(parent)
 
-        self.dragging = False
-        self.drag_position = QPoint()
+        # ---------------------------------------------------------
+        # WINDOW
+        # ---------------------------------------------------------
+
+        self.setFixedSize(96, 96)
 
         self.setWindowFlags(
             Qt.FramelessWindowHint
-            | Qt.WindowStaysOnTopHint
             | Qt.Tool
+            | Qt.WindowStaysOnTopHint
         )
 
         self.setAttribute(
             Qt.WA_TranslucentBackground,
-            True
+            True,
         )
 
-        self.setFixedSize(96, 96)
-
-        self.logo = QLabel(self)
-
-        self.logo.setAlignment(
-            Qt.AlignCenter
+        self.setAttribute(
+            Qt.WA_NoSystemBackground,
+            True,
         )
 
-        self.logo.setAttribute(
-            Qt.WA_TransparentForMouseEvents,
-            True
-        )
+        self.setMouseTracking(True)
 
-        self.logo.setGeometry(
-            0,
-            0,
-            96,
-            96
-        )
+        self.setCursor(Qt.OpenHandCursor)
 
-        project_root = (
-            Path(__file__)
-            .resolve()
-            .parents[2]
-        )
+        # ---------------------------------------------------------
+        # LOGO
+        # ---------------------------------------------------------
 
-        logo_path = (
-            project_root
-            / "alphaos-branding-main"
-            / "assets"
-            / "logo-no-background.png"
-        )
+        self.pixmap = QPixmap()
 
-        # Fallback for an installed/build-tree copy.
-        if not logo_path.exists():
+        if image_path:
+            print(
+                f"[PET] Loading logo: {image_path}",
+                flush=True,
+            )
 
-            fallback_paths = [
+            self.pixmap = QPixmap(image_path)
 
-                Path(
-                    "/etc/calamares/branding/alphaos/logo-no-background.png"
-                ),
+            if self.pixmap.isNull():
+                print(
+                    "[PET] ERROR: Could not load logo",
+                    flush=True,
+                )
+            else:
+                print(
+                    "[PET] Logo loaded "
+                    f"{self.pixmap.width()}x"
+                    f"{self.pixmap.height()}",
+                    flush=True,
+                )
 
-                project_root
-                / "Alpha_OS"
-                / "alphaos-branding-main"
-                / "assets"
-                / "logo-no-background.png",
-
-            ]
-
-            for fallback in fallback_paths:
-
-                if fallback.exists():
-
-                    logo_path = fallback
-                    break
-
-        pixmap = QPixmap(
-            str(logo_path)
-        )
-
-        if not pixmap.isNull():
-
-            self.logo.setPixmap(
-                pixmap.scaled(
+                self.pixmap = self.pixmap.scaled(
                     88,
                     88,
                     Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation
+                    Qt.SmoothTransformation,
                 )
-            )
 
-        self.setCursor(
-            Qt.PointingHandCursor
+        # ---------------------------------------------------------
+        # CLICK / DRAG STATE
+        # ---------------------------------------------------------
+
+        self.mouse_down = False
+        self.dragging = False
+
+        self.press_global = QPoint()
+        self.press_local = QPoint()
+
+        print(
+            "[PET] AlphaPet created",
+            flush=True,
         )
 
-    # ======================================================
+    # =============================================================
+    # PAINT
+    # =============================================================
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+
+        painter.setRenderHint(
+            QPainter.Antialiasing,
+            True,
+        )
+
+        painter.setRenderHint(
+            QPainter.SmoothPixmapTransform,
+            True,
+        )
+
+        # Completely transparent background.
+        # Only the actual PNG is drawn.
+        if not self.pixmap.isNull():
+
+            x = (
+                self.width()
+                - self.pixmap.width()
+            ) // 2
+
+            y = (
+                self.height()
+                - self.pixmap.height()
+            ) // 2
+
+            painter.drawPixmap(
+                x,
+                y,
+                self.pixmap,
+            )
+
+        painter.end()
+
+    # =============================================================
     # MOUSE PRESS
-    # ======================================================
+    # =============================================================
 
     def mousePressEvent(self, event):
 
+        print(
+            "[PET] PRESS",
+            f"button={event.button()}",
+            f"global={event.globalPosition().toPoint()}",
+            f"local={event.position().toPoint()}",
+            flush=True,
+        )
+
         if event.button() == Qt.LeftButton:
 
-            self.drag_position = (
-                event.globalPosition().toPoint()
-                - self.frameGeometry().topLeft()
-            )
-
+            self.mouse_down = True
             self.dragging = False
 
-            event.accept()
+            self.press_global = (
+                event.globalPosition().toPoint()
+            )
 
+            self.press_local = (
+                event.position().toPoint()
+            )
+
+            self.setCursor(
+                Qt.ClosedHandCursor
+            )
+
+            print(
+                "[PET] LEFT BUTTON DOWN",
+                flush=True,
+            )
+
+            event.accept()
             return
 
-        event.ignore()
+        super().mousePressEvent(event)
 
-    # ======================================================
+    # =============================================================
     # MOUSE MOVE
-    # ======================================================
+    # =============================================================
 
     def mouseMoveEvent(self, event):
 
-        if (
-            event.buttons()
-            & Qt.LeftButton
-        ):
-
-            current_position = (
-                event.globalPosition().toPoint()
-            )
-
-            new_position = (
-                current_position
-                - self.drag_position
-            )
-
-            # Only consider this a drag after
-            # the pointer actually moved.
-            if (
-                new_position
-                != self.pos()
-            ):
-
-                self.dragging = True
-
-                self.move(
-                    new_position
-                )
-
-                self.position_changed.emit()
-
-            event.accept()
-
+        if not self.mouse_down:
             return
 
-        event.ignore()
+        current_global = (
+            event.globalPosition().toPoint()
+        )
 
-    # ======================================================
+        delta = (
+            current_global
+            - self.press_global
+        )
+
+        print(
+            "[PET] MOVE",
+            f"global={current_global}",
+            f"delta={delta}",
+            flush=True,
+        )
+
+        # ---------------------------------------------------------
+        # DON'T START DRAGGING FOR A SIMPLE CLICK
+        # ---------------------------------------------------------
+
+        if not self.dragging:
+
+            if delta.manhattanLength() < 8:
+
+                print(
+                    "[PET] movement below threshold",
+                    flush=True,
+                )
+
+                event.accept()
+                return
+
+            print(
+                "[PET] >>> STARTING NATIVE WINDOW MOVE <<<",
+                flush=True,
+            )
+
+            self.dragging = True
+
+            # -----------------------------------------------------
+            # WAYLAND FIX
+            #
+            # DO NOT USE:
+            #
+            # self.move(...)
+            #
+            # Wayland does not allow an application to arbitrarily
+            # reposition a top-level window.
+            #
+            # startSystemMove() asks the compositor to perform the
+            # actual window movement.
+            # -----------------------------------------------------
+
+            window = self.windowHandle()
+
+            if window is not None:
+
+                try:
+
+                    started = (
+                        window.startSystemMove()
+                    )
+
+                    print(
+                        "[PET] startSystemMove:",
+                        started,
+                        flush=True,
+                    )
+
+                except Exception as exc:
+
+                    print(
+                        "[PET] startSystemMove ERROR:",
+                        repr(exc),
+                        flush=True,
+                    )
+
+            else:
+
+                print(
+                    "[PET] ERROR: No QWindow handle",
+                    flush=True,
+                )
+
+            event.accept()
+            return
+
+        event.accept()
+
+    # =============================================================
     # MOUSE RELEASE
-    # ======================================================
+    # =============================================================
 
     def mouseReleaseEvent(self, event):
 
+        print(
+            "[PET] RELEASE",
+            f"button={event.button()}",
+            f"global={event.globalPosition().toPoint()}",
+            f"dragging={self.dragging}",
+            flush=True,
+        )
+
         if event.button() == Qt.LeftButton:
 
-            was_dragging = (
-                self.dragging
-            )
+            was_dragging = self.dragging
 
+            self.mouse_down = False
             self.dragging = False
 
-            # A click is generated only when the
-            # user didn't actually move the pet.
-            if not was_dragging:
+            self.setCursor(
+                Qt.OpenHandCursor
+            )
+
+            # -----------------------------------------------------
+            # DRAG FINISHED
+            # -----------------------------------------------------
+
+            if was_dragging:
+
+                print(
+                    "[PET] DRAG COMPLETE",
+                    f"position={self.pos()}",
+                    flush=True,
+                )
+
+                self.moved.emit()
+
+            # -----------------------------------------------------
+            # NORMAL CLICK
+            # -----------------------------------------------------
+
+            else:
+
+                print(
+                    "[PET] CLICK detected",
+                    flush=True,
+                )
 
                 self.clicked.emit()
 
             event.accept()
-
             return
 
-        event.ignore()
+        super().mouseReleaseEvent(event)
+
+    # =============================================================
+    # MOVE EVENT
+    # =============================================================
+
+    def moveEvent(self, event):
+
+        position = self.pos()
+
+        print(
+            "[PET] WINDOW MOVE",
+            f"position={position}",
+            flush=True,
+        )
+
+        self.moved.emit()
+
+        super().moveEvent(event)
+
+    # =============================================================
+    # ENTER
+    # =============================================================
+
+    def enterEvent(self, event):
+
+        print(
+            "[PET] Mouse ENTER",
+            flush=True,
+        )
+
+        super().enterEvent(event)
+
+    # =============================================================
+    # LEAVE
+    # =============================================================
+
+    def leaveEvent(self, event):
+
+        print(
+            "[PET] Mouse LEAVE",
+            flush=True,
+        )
+
+        super().leaveEvent(event)

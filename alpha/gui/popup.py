@@ -1,494 +1,243 @@
-from PySide6.QtCore import Qt
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, QPoint
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QWidget,
-    QLabel,
-    QPushButton,
     QVBoxLayout,
     QHBoxLayout,
+    QLabel,
+    QPushButton,
     QFrame,
-    QScrollArea,
 )
 
 
 class AlphaPopup(QWidget):
+    def __init__(self, application, parent=None):
+        super().__init__(parent)
 
-    scan_requested = Signal()
-    view_updates_requested = Signal()
-    close_requested = Signal()
-
-    def __init__(
-        self,
-        updates=0,
-        installed_count=0
-    ):
-
-        super().__init__()
+        self.application = application
 
         self.setWindowFlags(
             Qt.FramelessWindowHint
-            | Qt.WindowStaysOnTopHint
             | Qt.Tool
+            | Qt.WindowStaysOnTopHint
         )
 
-        self.setAttribute(
-            Qt.WA_TranslucentBackground,
-            True
-        )
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
 
-        self.setFixedWidth(
-            330
-        )
+        self.setFixedSize(310, 300)
 
         self.build_ui()
 
-        self.set_scan_finished({
-            "update_count": updates,
-            "installed_count": installed_count,
-            "updates": {}
-        })
-
-    # ======================================================
-    # UI
-    # ======================================================
-
     def build_ui(self):
+        self.frame = QFrame(self)
 
-        outer = QVBoxLayout(
-            self
-        )
+        self.frame.setGeometry(0, 0, 310, 300)
 
-        outer.setContentsMargins(
-            10,
-            10,
-            10,
-            10
-        )
-
-        outer.setSpacing(
-            0
-        )
-
-        self.card = QFrame()
-
-        self.card.setObjectName(
-            "card"
-        )
-
-        self.card.setStyleSheet("""
-            QFrame#card {
-                background: rgba(25, 28, 34, 245);
-                border: 1px solid rgba(255, 255, 255, 35);
+        self.frame.setStyleSheet("""
+            QFrame {
+                background: #101722;
+                border: 1px solid #2585e8;
                 border-radius: 16px;
             }
 
             QLabel {
-                color: white;
-            }
-
-            QLabel#title {
-                font-size: 20px;
-                font-weight: bold;
-            }
-
-            QLabel#status {
-                color: #c8ccd4;
-                font-size: 13px;
-            }
-
-            QLabel#count {
-                font-size: 15px;
-                font-weight: bold;
+                color: #e8edf5;
+                background: transparent;
+                border: none;
             }
 
             QPushButton {
-                background: rgba(255, 255, 255, 18);
+                background: #18304a;
                 color: white;
-                border: 1px solid rgba(255, 255, 255, 30);
-                border-radius: 9px;
-                padding: 8px 12px;
+                border: none;
+                border-radius: 8px;
+                padding: 9px;
+                font-weight: 600;
             }
 
             QPushButton:hover {
-                background: rgba(255, 255, 255, 30);
+                background: #24639a;
             }
 
             QPushButton:pressed {
-                background: rgba(255, 255, 255, 45);
+                background: #0f2439;
+            }
+
+            QPushButton#updates {
+                background: #1877e8;
+            }
+
+            QPushButton#updates:hover {
+                background: #2587f5;
             }
 
             QPushButton#close {
-                background: rgba(180, 50, 50, 180);
+                background: #a52f34;
             }
 
             QPushButton#close:hover {
-                background: rgba(210, 60, 60, 220);
+                background: #c33a40;
             }
         """)
 
-        outer.addWidget(
-            self.card
+        layout = QVBoxLayout(self.frame)
+        layout.setContentsMargins(16, 14, 16, 14)
+        layout.setSpacing(8)
+
+        title = QLabel("Alpha")
+
+        title_font = QFont()
+        title_font.setPointSize(18)
+        title_font.setBold(True)
+        title.setFont(title_font)
+
+        layout.addWidget(title)
+
+        self.subtitle = QLabel("What can I help you with?")
+        self.subtitle.setStyleSheet(
+            "color: #aab7c7; font-size: 12px;"
         )
 
-        layout = QVBoxLayout(
-            self.card
+        layout.addWidget(self.subtitle)
+
+        self.status = QLabel("Checking package updates...")
+        self.status.setStyleSheet(
+            "color: #ffc533; font-weight: bold;"
         )
 
-        layout.setContentsMargins(
-            16,
-            14,
-            16,
-            14
-        )
+        layout.addWidget(self.status)
 
-        layout.setSpacing(
-            9
-        )
+        self.package_info = QLabel("")
+        self.package_info.setWordWrap(True)
 
-        # --------------------------------------------------
-        # TITLE
-        # --------------------------------------------------
+        self.package_info.setStyleSheet("""
+            color: #9eacbd;
+            font-size: 11px;
+        """)
 
-        self.title = QLabel(
-            "Alpha"
-        )
+        layout.addWidget(self.package_info)
 
-        self.title.setObjectName(
-            "title"
-        )
-
-        layout.addWidget(
-            self.title
-        )
-
-        self.status = QLabel(
-            "Checking your system..."
-        )
-
-        self.status.setObjectName(
-            "status"
-        )
-
-        self.status.setWordWrap(
-            True
-        )
-
-        layout.addWidget(
-            self.status
-        )
-
-        # --------------------------------------------------
-        # COUNT
-        # --------------------------------------------------
-
-        self.count = QLabel(
-            ""
-        )
-
-        self.count.setObjectName(
-            "count"
-        )
-
-        layout.addWidget(
-            self.count
-        )
-
-        # --------------------------------------------------
-        # UPDATE LIST
-        # --------------------------------------------------
-
-        self.updates_area = QScrollArea()
-
-        self.updates_area.setWidgetResizable(
-            True
-        )
-
-        self.updates_area.setMaximumHeight(
-            150
-        )
-
-        self.updates_area.setVisible(
-            False
-        )
-
-        self.updates_container = QWidget()
-
-        self.updates_layout = QVBoxLayout(
-            self.updates_container
-        )
-
-        self.updates_layout.setContentsMargins(
-            0,
-            0,
-            0,
-            0
-        )
-
-        self.updates_layout.setSpacing(
-            4
-        )
-
-        self.updates_area.setWidget(
-            self.updates_container
-        )
-
-        layout.addWidget(
-            self.updates_area
-        )
-
-        # --------------------------------------------------
-        # BUTTONS
-        # --------------------------------------------------
-
-        buttons = QHBoxLayout()
-
-        self.scan_button = QPushButton(
-            "Scan"
-        )
-
+        self.scan_button = QPushButton("Scan")
         self.scan_button.clicked.connect(
-            self.scan_requested.emit
+            self.application.scan
         )
 
-        self.updates_button = QPushButton(
-            "View Updates"
-        )
+        layout.addWidget(self.scan_button)
+
+        self.updates_button = QPushButton("View Updates")
+        self.updates_button.setObjectName("updates")
 
         self.updates_button.clicked.connect(
-            self.view_updates_requested.emit
+            self.application.show_updates
         )
 
-        buttons.addWidget(
-            self.scan_button
+        layout.addWidget(self.updates_button)
+
+        self.upgrade_button = QPushButton("Upgrade")
+
+        self.upgrade_button.clicked.connect(
+            self.application.upgrade
         )
 
-        buttons.addWidget(
-            self.updates_button
-        )
+        layout.addWidget(self.upgrade_button)
 
-        layout.addLayout(
-            buttons
-        )
-
-        # --------------------------------------------------
-        # CLOSE
-        # --------------------------------------------------
-
-        self.close_button = QPushButton(
-            "Close Alpha"
-        )
-
-        self.close_button.setObjectName(
-            "close"
-        )
+        self.close_button = QPushButton("Close Alpha")
+        self.close_button.setObjectName("close")
 
         self.close_button.clicked.connect(
-            self.close_requested.emit
+            self.application.quit
         )
 
-        layout.addWidget(
-            self.close_button
-        )
+        layout.addWidget(self.close_button)
 
-    # ======================================================
-    # SCANNING
-    # ======================================================
+    def set_status(self, text):
+        self.status.setText(text)
 
-    def set_scanning(self):
-
-        self.status.setText(
-            "Scanning packages..."
-        )
-
-        self.count.setText(
-            "Please wait..."
-        )
-
-        self.scan_button.setEnabled(
-            False
-        )
-
-    # ======================================================
-    # SCAN COMPLETE
-    # ======================================================
-
-    def set_scan_finished(
-        self,
-        result
-    ):
-
-        self.scan_button.setEnabled(
-            True
-        )
-
-        if not result:
-
-            self.status.setText(
-                "Scan failed."
-            )
-
-            self.count.setText(
-                ""
-            )
-
-            return
-
-        updates = result.get(
-            "updates",
-            {}
-        )
-
-        count = result.get(
-            "update_count",
-            len(updates)
-        )
-
-        installed = result.get(
-            "installed_count",
-            0
-        )
-
-        if count == 0:
-
-            self.status.setText(
+    def set_packages(self, packages):
+        if not packages:
+            self.package_info.setText(
                 "Your system is up to date."
             )
+            return
 
-            self.count.setText(
-                f"{installed:,} packages checked"
-            )
+        lines = []
 
-        else:
+        for package in packages[:4]:
+            name = package.get("name", "")
+            installed = package.get("installed", "")
+            available = package.get("available", "")
 
-            self.status.setText(
-                "Updates are available."
-            )
-
-            self.count.setText(
-                f"{count} update(s) • "
-                f"{installed:,} packages checked"
-            )
-
-        self.populate_updates(
-            updates
-        )
-
-    # ======================================================
-    # UPDATE LIST
-    # ======================================================
-
-    def populate_updates(
-        self,
-        updates
-    ):
-
-        while (
-            self.updates_layout.count()
-        ):
-
-            item = (
-                self.updates_layout.takeAt(
-                    0
+            if available:
+                lines.append(
+                    f"{name}\n"
+                    f"  {installed} → {available}"
                 )
+            else:
+                lines.append(name)
+
+        if len(packages) > 4:
+            lines.append(
+                f"... and {len(packages) - 4} more"
             )
 
-            widget = item.widget()
-
-            if widget:
-
-                widget.deleteLater()
-
-        # Show only a compact preview.
-        items = list(
-            updates.items()
-        )[:5]
-
-        for package, info in items:
-
-            installed = info.get(
-                "installed",
-                "?"
-            )
-
-            available = info.get(
-                "available",
-                "?"
-            )
-
-            importance = info.get(
-                "importance",
-                {}
-            )
-
-            level = importance.get(
-                "level",
-                ""
-            )
-
-            text = (
-                f"{package}\n"
-                f"{installed} → {available}"
-            )
-
-            if level:
-
-                text += (
-                    f"  [{level}]"
-                )
-
-            label = QLabel(
-                text
-            )
-
-            label.setWordWrap(
-                True
-            )
-
-            label.setStyleSheet("""
-                QLabel {
-                    background: rgba(255,255,255,12);
-                    border-radius: 7px;
-                    padding: 6px;
-                    color: #eeeeee;
-                    font-size: 11px;
-                }
-            """)
-
-            self.updates_layout.addWidget(
-                label
-            )
-
-        if updates:
-
-            self.updates_layout.addStretch()
-
-    # ======================================================
-    # SHOW UPDATES
-    # ======================================================
-
-    def show_updates(
-        self,
-        updates
-    ):
-
-        self.populate_updates(
-            updates
+        self.package_info.setText(
+            "\n".join(lines)
         )
 
-        self.updates_area.setVisible(
-            bool(updates)
+    def show_at_pet(self):
+        pet = self.application.pet
+
+        if pet is None:
+            return
+
+        pet_global = pet.mapToGlobal(
+            QPoint(0, 0)
         )
 
-        if updates:
+        screen = pet.screen()
 
-            self.status.setText(
-                f"{len(updates)} package update(s) available."
+        if screen is None:
+            self.move(
+                pet_global.x() - self.width() - 8,
+                pet_global.y(),
+            )
+            return
+
+        available = screen.availableGeometry()
+
+        # Prefer popup to the left of the pet.
+        x = pet_global.x() - self.width() - 10
+
+        # If there isn't enough room on the left,
+        # put it to the right.
+        if x < available.left():
+            x = (
+                pet_global.x()
+                + pet.width()
+                + 10
             )
 
-        else:
+        # Keep popup inside the desktop.
+        x = max(
+            available.left(),
+            min(
+                x,
+                available.right() - self.width() + 1,
+            ),
+        )
 
-            self.status.setText(
-                "No package updates available."
-            )
+        y = pet_global.y()
 
-        self.adjustSize()
+        y = max(
+            available.top(),
+            min(
+                y,
+                available.bottom() - self.height() + 1,
+            ),
+        )
+
+        self.move(x, y)
+
+    def showEvent(self, event):
+        self.show_at_pet()
+        super().showEvent(event)

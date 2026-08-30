@@ -1,12 +1,5 @@
-import sys
-
-from alpha.gui.app import AlphaApplication
-
-
-def main():
-    application = AlphaApplication()
-    sys.exit(application.run())
+from alpha.gui.main import main
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
