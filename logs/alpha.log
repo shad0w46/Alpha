@@ -1,0 +1,246 @@
+2026-08-29 18:55:37,956 [INFO] Loaded module: System
+2026-08-29 18:55:37,956 [INFO] System module initialized
+2026-08-29 18:55:48,144 [INFO] Loaded module: System
+2026-08-29 18:55:48,145 [INFO] System module initialized
+2026-08-29 18:55:56,958 [INFO] Loaded module: System
+2026-08-29 18:55:56,958 [INFO] System module initialized
+2026-08-29 18:55:56,958 [INFO] Scanning module: System
+2026-08-29 18:56:40,150 [INFO] Loaded module: Package Intelligence
+2026-08-29 18:56:40,154 [INFO] Loaded module: System
+2026-08-29 18:56:40,154 [INFO] Package Intelligence module initialized
+2026-08-29 18:56:40,154 [INFO] System module initialized
+2026-08-29 18:56:45,335 [INFO] Loaded module: Package Intelligence
+2026-08-29 18:56:45,342 [INFO] Loaded module: System
+2026-08-29 18:56:45,342 [INFO] Package Intelligence module initialized
+2026-08-29 18:56:45,342 [INFO] System module initialized
+2026-08-29 18:56:45,342 [INFO] Scanning module: Package Intelligence
+2026-08-29 18:56:45,342 [INFO] Reading installed package database
+2026-08-29 18:56:45,368 [INFO] Found 2418 installed packages
+2026-08-29 18:56:45,369 [INFO] Checking APT for available updates
+2026-08-29 18:56:46,649 [INFO] Found 8 available package updates
+2026-08-29 18:56:46,649 [INFO] Scanning module: System
+2026-08-29 18:57:24,082 [INFO] Loaded module: Package Intelligence
+2026-08-29 18:57:24,087 [INFO] Loaded module: System
+2026-08-29 18:57:24,087 [INFO] Package Intelligence module initialized
+2026-08-29 18:57:24,087 [INFO] System module initialized
+2026-08-29 18:57:24,087 [INFO] Scanning module: Package Intelligence
+2026-08-29 18:57:24,087 [INFO] Reading installed package database
+2026-08-29 18:57:24,113 [INFO] Found 2418 installed packages
+2026-08-29 18:57:24,113 [INFO] Checking APT for available updates
+2026-08-29 18:57:25,177 [INFO] Found 0 available package updates
+2026-08-29 18:57:25,177 [INFO] Scanning module: System
+2026-08-29 18:58:09,279 [INFO] Loaded module: Package Intelligence
+2026-08-29 18:58:09,291 [INFO] Loaded module: System
+2026-08-29 18:58:09,291 [INFO] Package Intelligence module initialized
+2026-08-29 18:58:09,291 [INFO] System module initialized
+2026-08-29 18:58:09,291 [INFO] Scanning module: Package Intelligence
+2026-08-29 18:58:09,291 [INFO] Reading installed package database
+2026-08-29 18:58:09,318 [INFO] Found 2418 installed packages
+2026-08-29 18:58:09,318 [INFO] Checking APT for available updates
+2026-08-29 18:58:09,618 [INFO] Found 9 available package updates
+2026-08-29 18:58:09,619 [INFO] Scanning module: System
+2026-08-29 18:59:28,713 [INFO] Loaded module: Package Intelligence
+2026-08-29 18:59:28,717 [INFO] Loaded module: System
+2026-08-29 18:59:28,717 [INFO] Package Intelligence module initialized
+2026-08-29 18:59:28,717 [INFO] System module initialized
+2026-08-29 18:59:28,718 [INFO] Scanning module: Package Intelligence
+2026-08-29 18:59:28,718 [INFO] Reading installed package database
+2026-08-29 18:59:28,742 [INFO] Found 2418 installed packages
+2026-08-29 18:59:28,743 [INFO] Checking APT for available updates
+2026-08-29 18:59:28,990 [INFO] Found 9 APT candidates
+2026-08-29 18:59:29,003 [INFO] Found 9 actual package updates
+2026-08-29 18:59:29,003 [INFO] Scanning module: System
+2026-08-29 18:59:36,621 [INFO] Loaded module: Package Intelligence
+2026-08-29 18:59:36,634 [INFO] Loaded module: System
+2026-08-29 18:59:36,634 [INFO] Package Intelligence module initialized
+2026-08-29 18:59:36,634 [INFO] System module initialized
+2026-08-29 18:59:36,634 [INFO] Scanning module: Package Intelligence
+2026-08-29 18:59:36,634 [INFO] Reading installed package database
+2026-08-29 18:59:36,659 [INFO] Found 2418 installed packages
+2026-08-29 18:59:36,660 [INFO] Checking APT for available updates
+2026-08-29 18:59:36,968 [INFO] Found 9 APT candidates
+2026-08-29 18:59:36,982 [INFO] Found 9 actual package updates
+2026-08-29 18:59:36,982 [INFO] Scanning module: System
+2026-08-29 19:02:07,386 [INFO] Loaded module: Package Intelligence
+2026-08-29 19:02:07,400 [INFO] Loaded module: System
+2026-08-29 19:02:07,400 [INFO] Package Intelligence module initialized
+2026-08-29 19:02:07,400 [INFO] System module initialized
+2026-08-29 19:02:07,400 [INFO] Scanning module: Package Intelligence
+2026-08-29 19:02:07,401 [INFO] Reading installed package database
+2026-08-29 19:02:07,424 [INFO] Found 2418 installed packages
+2026-08-29 19:02:07,424 [INFO] Checking APT for available updates
+2026-08-29 19:02:07,684 [INFO] Found 9 APT candidates
+2026-08-29 19:02:07,698 [INFO] Found 9 actual package updates
+2026-08-29 19:02:07,698 [INFO] Scanning module: System
+2026-08-29 19:03:06,884 [INFO] Loaded module: Package Intelligence
+2026-08-29 19:03:06,889 [INFO] Loaded module: System
+2026-08-29 19:03:06,889 [INFO] Package Intelligence module initialized
+2026-08-29 19:03:06,889 [INFO] System module initialized
+2026-08-29 19:03:06,889 [INFO] Refreshing APT package indexes
+2026-08-29 19:03:06,890 [INFO] Running: sudo apt-get update
+2026-08-29 19:03:18,617 [INFO] Starting package upgrade
+2026-08-29 19:03:18,617 [INFO] Running: sudo apt-get upgrade
+2026-08-29 19:04:01,719 [INFO] Loaded module: Package Intelligence
+2026-08-29 19:04:01,724 [INFO] Loaded module: System
+2026-08-29 19:04:01,724 [INFO] Package Intelligence module initialized
+2026-08-29 19:04:01,724 [INFO] System module initialized
+2026-08-29 19:04:01,725 [INFO] Scanning module: Package Intelligence
+2026-08-29 19:04:01,725 [INFO] Reading installed package database
+2026-08-29 19:04:01,749 [INFO] Found 2418 installed packages
+2026-08-29 19:04:01,749 [INFO] Checking APT for available updates
+2026-08-29 19:04:02,045 [INFO] Found 1 APT candidates
+2026-08-29 19:04:02,046 [INFO] Found 1 actual package updates
+2026-08-29 19:04:02,046 [INFO] Scanning module: System
+2026-08-29 19:04:41,794 [INFO] Loaded module: Package Intelligence
+2026-08-29 19:04:41,809 [INFO] Loaded module: System
+2026-08-29 19:04:41,809 [INFO] Package Intelligence module initialized
+2026-08-29 19:04:41,809 [INFO] System module initialized
+2026-08-29 19:04:41,809 [INFO] Scanning module: Package Intelligence
+2026-08-29 19:04:41,809 [INFO] Reading installed package database
+2026-08-29 19:04:41,838 [INFO] Found 2418 installed packages
+2026-08-29 19:04:41,838 [INFO] Checking APT for available updates
+2026-08-29 19:04:42,126 [INFO] Found 1 APT candidates
+2026-08-29 19:04:42,128 [INFO] Found 1 actual package updates
+2026-08-29 19:04:42,128 [INFO] Scanning module: System
+2026-08-30 16:07:51,026 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:07:51,031 [INFO] Loaded module: System
+2026-08-30 16:07:51,031 [INFO] Package Intelligence module initialized
+2026-08-30 16:07:51,031 [INFO] System module initialized
+2026-08-30 16:07:51,031 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:07:51,031 [INFO] Reading installed package database
+2026-08-30 16:07:51,056 [INFO] Found 2418 installed packages
+2026-08-30 16:07:51,056 [INFO] Checking APT for available updates
+2026-08-30 16:07:51,339 [INFO] Found 2 APT candidates
+2026-08-30 16:07:51,342 [INFO] Found 2 actual package updates
+2026-08-30 16:07:51,342 [INFO] Scanning module: System
+2026-08-30 16:08:13,498 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:08:13,503 [INFO] Loaded module: System
+2026-08-30 16:08:13,503 [INFO] Package Intelligence module initialized
+2026-08-30 16:08:13,503 [INFO] System module initialized
+2026-08-30 16:08:14,012 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:08:14,012 [INFO] Reading installed package database
+2026-08-30 16:08:14,041 [INFO] Found 2418 installed packages
+2026-08-30 16:08:14,041 [INFO] Checking APT for available updates
+2026-08-30 16:08:14,294 [INFO] Found 2 APT candidates
+2026-08-30 16:08:14,298 [INFO] Found 2 actual package updates
+2026-08-30 16:08:14,298 [INFO] Scanning module: System
+2026-08-30 16:11:54,015 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:11:54,020 [INFO] Loaded module: System
+2026-08-30 16:11:54,020 [INFO] Package Intelligence module initialized
+2026-08-30 16:11:54,020 [INFO] System module initialized
+2026-08-30 16:11:54,535 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:11:54,536 [INFO] Reading installed package database
+2026-08-30 16:11:54,565 [INFO] Found 2418 installed packages
+2026-08-30 16:11:54,565 [INFO] Checking APT for available updates
+2026-08-30 16:11:54,843 [INFO] Found 2 APT candidates
+2026-08-30 16:11:54,846 [INFO] Found 2 actual package updates
+2026-08-30 16:11:54,846 [INFO] Scanning module: System
+2026-08-30 16:12:17,604 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:12:17,605 [INFO] Reading installed package database
+2026-08-30 16:12:17,629 [INFO] Found 2418 installed packages
+2026-08-30 16:12:17,629 [INFO] Checking APT for available updates
+2026-08-30 16:12:17,912 [INFO] Found 2 APT candidates
+2026-08-30 16:12:17,915 [INFO] Found 2 actual package updates
+2026-08-30 16:12:17,915 [INFO] Scanning module: System
+2026-08-30 16:13:40,133 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:13:40,139 [INFO] Loaded module: System
+2026-08-30 16:13:40,139 [INFO] Package Intelligence module initialized
+2026-08-30 16:13:40,139 [INFO] System module initialized
+2026-08-30 16:13:40,701 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:13:40,701 [INFO] Reading installed package database
+2026-08-30 16:13:40,727 [INFO] Found 2418 installed packages
+2026-08-30 16:13:40,727 [INFO] Checking APT for available updates
+2026-08-30 16:13:41,024 [INFO] Found 2 APT candidates
+2026-08-30 16:13:41,027 [INFO] Found 2 actual package updates
+2026-08-30 16:13:41,027 [INFO] Scanning module: System
+2026-08-30 16:15:29,701 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:15:29,705 [INFO] Loaded module: System
+2026-08-30 16:15:29,705 [INFO] Package Intelligence module initialized
+2026-08-30 16:15:29,706 [INFO] System module initialized
+2026-08-30 16:15:30,268 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:15:30,269 [INFO] Reading installed package database
+2026-08-30 16:15:30,296 [INFO] Found 2418 installed packages
+2026-08-30 16:15:30,297 [INFO] Checking APT for available updates
+2026-08-30 16:15:30,597 [INFO] Found 2 APT candidates
+2026-08-30 16:15:30,601 [INFO] Found 2 actual package updates
+2026-08-30 16:15:30,601 [INFO] Scanning module: System
+2026-08-30 16:15:35,168 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:15:35,168 [INFO] Reading installed package database
+2026-08-30 16:15:35,196 [INFO] Found 2418 installed packages
+2026-08-30 16:15:35,196 [INFO] Checking APT for available updates
+2026-08-30 16:15:35,457 [INFO] Found 2 APT candidates
+2026-08-30 16:15:35,462 [INFO] Found 2 actual package updates
+2026-08-30 16:15:35,462 [INFO] Scanning module: System
+2026-08-30 16:16:32,526 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:16:32,531 [INFO] Loaded module: System
+2026-08-30 16:16:32,531 [INFO] Package Intelligence module initialized
+2026-08-30 16:16:32,531 [INFO] System module initialized
+2026-08-30 16:16:33,043 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:16:33,043 [INFO] Reading installed package database
+2026-08-30 16:16:33,070 [INFO] Found 2418 installed packages
+2026-08-30 16:16:33,070 [INFO] Checking APT for available updates
+2026-08-30 16:16:33,346 [INFO] Found 2 APT candidates
+2026-08-30 16:16:33,349 [INFO] Found 2 actual package updates
+2026-08-30 16:16:33,349 [INFO] Scanning module: System
+2026-08-30 16:17:37,104 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:17:37,108 [INFO] Loaded module: System
+2026-08-30 16:17:37,108 [INFO] Package Intelligence module initialized
+2026-08-30 16:17:37,108 [INFO] System module initialized
+2026-08-30 16:17:37,589 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:17:37,589 [INFO] Reading installed package database
+2026-08-30 16:17:37,614 [INFO] Found 2418 installed packages
+2026-08-30 16:17:37,614 [INFO] Checking APT for available updates
+2026-08-30 16:17:37,900 [INFO] Found 2 APT candidates
+2026-08-30 16:17:37,904 [INFO] Found 2 actual package updates
+2026-08-30 16:17:37,905 [INFO] Scanning module: System
+2026-08-30 16:18:36,706 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:18:36,706 [INFO] Reading installed package database
+2026-08-30 16:18:36,730 [INFO] Found 2418 installed packages
+2026-08-30 16:18:36,731 [INFO] Checking APT for available updates
+2026-08-30 16:18:36,988 [INFO] Found 2 APT candidates
+2026-08-30 16:18:36,992 [INFO] Found 2 actual package updates
+2026-08-30 16:18:36,993 [INFO] Scanning module: System
+2026-08-30 16:19:56,506 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:19:56,511 [INFO] Loaded module: System
+2026-08-30 16:19:56,511 [INFO] Package Intelligence module initialized
+2026-08-30 16:19:56,511 [INFO] System module initialized
+2026-08-30 16:19:56,991 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:19:56,991 [INFO] Reading installed package database
+2026-08-30 16:19:57,019 [INFO] Found 2418 installed packages
+2026-08-30 16:19:57,019 [INFO] Checking APT for available updates
+2026-08-30 16:19:57,290 [INFO] Found 2 APT candidates
+2026-08-30 16:19:57,293 [INFO] Found 2 actual package updates
+2026-08-30 16:19:57,293 [INFO] Scanning module: System
+2026-08-30 16:22:47,823 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:22:47,828 [INFO] Loaded module: System
+2026-08-30 16:22:47,828 [INFO] Package Intelligence module initialized
+2026-08-30 16:22:47,828 [INFO] System module initialized
+2026-08-30 16:22:48,377 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:22:48,377 [INFO] Reading installed package database
+2026-08-30 16:22:48,401 [INFO] Found 2418 installed packages
+2026-08-30 16:22:48,401 [INFO] Checking APT for available updates
+2026-08-30 16:22:48,677 [INFO] Found 2 APT candidates
+2026-08-30 16:22:48,680 [INFO] Found 2 actual package updates
+2026-08-30 16:22:48,680 [INFO] Scanning module: System
+2026-08-30 16:25:01,683 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:25:01,688 [INFO] Loaded module: System
+2026-08-30 16:25:01,688 [INFO] Package Intelligence module initialized
+2026-08-30 16:25:01,688 [INFO] System module initialized
+2026-08-30 16:25:02,257 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:25:02,258 [INFO] Reading installed package database
+2026-08-30 16:25:02,285 [INFO] Found 2418 installed packages
+2026-08-30 16:25:02,285 [INFO] Checking APT for available updates
+2026-08-30 16:25:02,569 [INFO] Found 2 APT candidates
+2026-08-30 16:25:02,572 [INFO] Found 2 actual package updates
+2026-08-30 16:25:02,572 [INFO] Scanning module: System
+2026-08-30 16:25:49,841 [INFO] Loaded module: Package Intelligence
+2026-08-30 16:25:49,846 [INFO] Loaded module: System
+2026-08-30 16:25:49,846 [INFO] Package Intelligence module initialized
+2026-08-30 16:25:49,846 [INFO] System module initialized
+2026-08-30 16:25:50,377 [INFO] Scanning module: Package Intelligence
+2026-08-30 16:25:50,378 [INFO] Reading installed package database
+2026-08-30 16:25:50,404 [INFO] Found 2418 installed packages
+2026-08-30 16:25:50,404 [INFO] Checking APT for available updates
+2026-08-30 16:25:50,686 [INFO] Found 2 APT candidates
+2026-08-30 16:25:50,690 [INFO] Found 2 actual package updates
+2026-08-30 16:25:50,690 [INFO] Scanning module: System

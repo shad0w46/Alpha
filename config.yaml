@@ -1,0 +1,10 @@
+alpha:
+  name: "Alpha"
+  version: "0.1.0"
+
+database:
+  path: "data/alpha.db"
+
+logging:
+  level: "INFO"
+  file: "logs/alpha.log"
