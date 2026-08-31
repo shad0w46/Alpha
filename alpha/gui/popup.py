@@ -24,14 +24,14 @@ class AlphaPopup(QWidget):
 
         self.setAttribute(Qt.WA_TranslucentBackground, True)
 
-        self.setFixedSize(310, 300)
+        self.setFixedSize(310, 320)
 
         self.build_ui()
 
     def build_ui(self):
         self.frame = QFrame(self)
 
-        self.frame.setGeometry(0, 0, 310, 300)
+        self.frame.setGeometry(0, 0, 310, 320)
 
         self.frame.setStyleSheet("""
             QFrame {
@@ -76,6 +76,13 @@ class AlphaPopup(QWidget):
             }
 
             QPushButton#close:hover {
+                background: #c33a40;
+            }
+            QPushButton#exit {
+                background: #a52f34;
+            }
+            
+            QPushButton#exit:hover {
                 background: #c33a40;
             }
         """)
@@ -141,14 +148,22 @@ class AlphaPopup(QWidget):
 
         layout.addWidget(self.upgrade_button)
 
-        self.close_button = QPushButton("Close Alpha")
+        self.close_button = QPushButton("Close")
         self.close_button.setObjectName("close")
 
         self.close_button.clicked.connect(
-            self.application.quit
+            self.hide
         )
 
         layout.addWidget(self.close_button)
+        self.exit_button = QPushButton("Exit")
+        self.exit_button.setObjectName("exit")
+        
+        self.exit_button.clicked.connect(
+            self.application.quit
+        )
+        
+        layout.addWidget(self.exit_button)
 
     def set_status(self, text):
         self.status.setText(text)
