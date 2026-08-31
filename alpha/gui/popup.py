@@ -1,21 +1,15 @@
-from PySide6.QtCore import (
-    Qt,
-    QPoint,
-    QTimer,
-)
-
+from PySide6.QtCore import Qt, QPoint, QTimer
 from PySide6.QtGui import QFont
-
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QLabel,
     QPushButton,
     QFrame,
+    QSizePolicy,
 )
 
 from alpha.core.process_monitor import ProcessMonitor
-
 
 class AlphaPopup(QWidget):
 
@@ -23,18 +17,6 @@ class AlphaPopup(QWidget):
         super().__init__(parent)
 
         self.application = application
-
-        # =========================================================
-        # PROCESS MONITOR TIMER
-        # =========================================================
-
-        self.monitor_timer = QTimer(self)
-
-        self.monitor_timer.timeout.connect(
-            self.update_process_monitor
-        )
-
-        self.monitor_timer.start(2000)
 
         # =========================================================
         # WINDOW
@@ -51,14 +33,29 @@ class AlphaPopup(QWidget):
             True,
         )
 
-        # Bigger because Process Monitor needs space.
-        self.setFixedSize(
-            310,
-            430,
-        )
+        # Minimum size instead of fixed size.
+        self.setMinimumWidth(310)
+        self.setMaximumWidth(420)
+
+        self.setMinimumHeight(180)
+
+        # Let Qt calculate the height.
+        self.adjustSize()
 
         # =========================================================
-        # UI
+        # PROCESS MONITOR
+        # =========================================================
+
+        self.monitor_timer = QTimer(self)
+
+        self.monitor_timer.timeout.connect(
+            self.update_process_monitor
+        )
+
+        self.monitor_timer.start(2000)
+
+        # =========================================================
+        # BUILD
         # =========================================================
 
         self.build_ui()
@@ -69,13 +66,28 @@ class AlphaPopup(QWidget):
 
     def build_ui(self):
 
-        self.frame = QFrame(self)
+        # =========================================================
+        # OUTER LAYOUT
+        # =========================================================
 
-        self.frame.setGeometry(
+        outer_layout = QVBoxLayout(self)
+
+        outer_layout.setContentsMargins(
             0,
             0,
-            310,
-            430,
+            0,
+            0,
+        )
+
+        # =========================================================
+        # FRAME
+        # =========================================================
+
+        self.frame = QFrame()
+
+        self.frame.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
         )
 
         self.frame.setStyleSheet("""
@@ -96,8 +108,9 @@ class AlphaPopup(QWidget):
                 color: white;
                 border: none;
                 border-radius: 8px;
-                padding: 9px;
+                padding: 9px 12px;
                 font-weight: 600;
+                min-height: 18px;
             }
 
             QPushButton:hover {
@@ -141,8 +154,12 @@ class AlphaPopup(QWidget):
             }
         """)
 
+        outer_layout.addWidget(
+            self.frame
+        )
+
         # =========================================================
-        # MAIN LAYOUT
+        # FRAME LAYOUT
         # =========================================================
 
         self.layout = QVBoxLayout(
@@ -167,17 +184,16 @@ class AlphaPopup(QWidget):
         )
 
         title_font = QFont()
-
-        title_font.setPointSize(
-            18
-        )
-
-        title_font.setBold(
-            True
-        )
+        title_font.setPointSize(18)
+        title_font.setBold(True)
 
         self.title.setFont(
             title_font
+        )
+
+        self.title.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
         )
 
         self.layout.addWidget(
@@ -190,6 +206,15 @@ class AlphaPopup(QWidget):
 
         self.subtitle = QLabel(
             "What can I help you with?"
+        )
+
+        self.subtitle.setWordWrap(
+            True
+        )
+
+        self.subtitle.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
         )
 
         self.subtitle.setStyleSheet(
@@ -208,9 +233,17 @@ class AlphaPopup(QWidget):
             "Checking package updates..."
         )
 
+        self.status.setWordWrap(
+            True
+        )
+
+        self.status.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
+        )
+
         self.status.setStyleSheet(
-            "color: #ffc533; "
-            "font-weight: bold;"
+            "color: #ffc533; font-weight: bold;"
         )
 
         self.layout.addWidget(
@@ -229,6 +262,11 @@ class AlphaPopup(QWidget):
             True
         )
 
+        self.package_info.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
+        )
+
         self.package_info.setStyleSheet("""
             color: #9eacbd;
             font-size: 11px;
@@ -243,6 +281,11 @@ class AlphaPopup(QWidget):
         # =========================================================
 
         self.main_page = QWidget()
+
+        self.main_page.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred,
+        )
 
         self.main_layout = QVBoxLayout(
             self.main_page
@@ -271,12 +314,12 @@ class AlphaPopup(QWidget):
             "updates"
         )
 
-        self.update_button.clicked.connect(
-            self.show_update_page
-        )
-
         self.main_layout.addWidget(
             self.update_button
+        )
+
+        self.update_button.clicked.connect(
+            self.show_update_page
         )
 
         # ---------------------------------------------------------
@@ -287,16 +330,16 @@ class AlphaPopup(QWidget):
             "Process Monitor"
         )
 
-        self.process_button.clicked.connect(
-            self.show_process_page
-        )
-
         self.main_layout.addWidget(
             self.process_button
         )
 
+        self.process_button.clicked.connect(
+            self.show_process_page
+        )
+
         # ---------------------------------------------------------
-        # CLOSE POPUP
+        # CLOSE
         # ---------------------------------------------------------
 
         self.close_button = QPushButton(
@@ -307,7 +350,6 @@ class AlphaPopup(QWidget):
             "close"
         )
 
-        # Only hide popup.
         self.close_button.clicked.connect(
             self.hide
         )
@@ -317,7 +359,7 @@ class AlphaPopup(QWidget):
         )
 
         # ---------------------------------------------------------
-        # EXIT ALPHA
+        # EXIT
         # ---------------------------------------------------------
 
         self.exit_button = QPushButton(
@@ -438,7 +480,7 @@ class AlphaPopup(QWidget):
         )
 
         # =========================================================
-        # PROCESS MONITOR PAGE
+        # PROCESS PAGE
         # =========================================================
 
         self.process_page = QWidget()
@@ -459,7 +501,7 @@ class AlphaPopup(QWidget):
         )
 
         # ---------------------------------------------------------
-        # RESOURCE SUMMARY
+        # RESOURCE TITLE
         # ---------------------------------------------------------
 
         self.resource_title = QLabel(
@@ -475,23 +517,26 @@ class AlphaPopup(QWidget):
             self.resource_title
         )
 
+        # ---------------------------------------------------------
+        # RESOURCE INFO
+        # ---------------------------------------------------------
+
         self.system_info = QLabel(
             "CPU: --\n"
             "RAM: --\n"
             "Load: --"
         )
 
-        self.system_info.setStyleSheet("""
-            color: #e8edf5;
-            font-size: 12px;
-        """)
+        self.system_info.setWordWrap(
+            True
+        )
 
         self.process_layout.addWidget(
             self.system_info
         )
 
         # ---------------------------------------------------------
-        # CPU
+        # CPU TITLE
         # ---------------------------------------------------------
 
         self.cpu_title = QLabel(
@@ -507,8 +552,20 @@ class AlphaPopup(QWidget):
             self.cpu_title
         )
 
+        # ---------------------------------------------------------
+        # CPU PROCESSES
+        # ---------------------------------------------------------
+
         self.cpu_processes = QLabel(
             "Loading..."
+        )
+
+        self.cpu_processes.setWordWrap(
+            False
+        )
+
+        self.cpu_processes.setTextInteractionFlags(
+            Qt.TextInteractionFlag.NoTextInteraction
         )
 
         self.cpu_processes.setStyleSheet("""
@@ -517,16 +574,12 @@ class AlphaPopup(QWidget):
             font-family: monospace;
         """)
 
-        self.cpu_processes.setWordWrap(
-            False
-        )
-
         self.process_layout.addWidget(
             self.cpu_processes
         )
 
         # ---------------------------------------------------------
-        # MEMORY
+        # MEMORY TITLE
         # ---------------------------------------------------------
 
         self.memory_title = QLabel(
@@ -542,8 +595,20 @@ class AlphaPopup(QWidget):
             self.memory_title
         )
 
+        # ---------------------------------------------------------
+        # MEMORY PROCESSES
+        # ---------------------------------------------------------
+
         self.memory_processes = QLabel(
             "Loading..."
+        )
+
+        self.memory_processes.setWordWrap(
+            False
+        )
+
+        self.memory_processes.setTextInteractionFlags(
+            Qt.TextInteractionFlag.NoTextInteraction
         )
 
         self.memory_processes.setStyleSheet("""
@@ -551,10 +616,6 @@ class AlphaPopup(QWidget):
             font-size: 11px;
             font-family: monospace;
         """)
-
-        self.memory_processes.setWordWrap(
-            False
-        )
 
         self.process_layout.addWidget(
             self.memory_processes
@@ -585,10 +646,39 @@ class AlphaPopup(QWidget):
         )
 
         # =========================================================
-        # INITIAL PAGE
+        # INITIAL STATE
         # =========================================================
 
         self.show_main_page()
+
+        self.update_size()
+
+    # =============================================================
+    # RESPONSIVE SIZE
+    # =============================================================
+
+    def update_size(self):
+
+        self.adjustSize()
+
+        # Keep popup within reasonable bounds.
+        screen = self.screen()
+
+        if screen is None:
+            return
+
+        available = screen.availableGeometry()
+
+        max_height = int(
+            available.height() * 0.85
+        )
+
+        if self.height() > max_height:
+
+            self.resize(
+                self.width(),
+                max_height,
+            )
 
     # =============================================================
     # MAIN PAGE
@@ -597,9 +687,7 @@ class AlphaPopup(QWidget):
     def show_main_page(self):
 
         self.main_page.show()
-
         self.update_page.hide()
-
         self.process_page.hide()
 
         self.title.setText(
@@ -610,6 +698,8 @@ class AlphaPopup(QWidget):
             "What can I help you with?"
         )
 
+        self.update_size()
+
     # =============================================================
     # UPDATE PAGE
     # =============================================================
@@ -617,9 +707,7 @@ class AlphaPopup(QWidget):
     def show_update_page(self):
 
         self.main_page.hide()
-
         self.update_page.show()
-
         self.process_page.hide()
 
         self.title.setText(
@@ -630,16 +718,16 @@ class AlphaPopup(QWidget):
             "Manage your system updates."
         )
 
+        self.update_size()
+
     # =============================================================
-    # PROCESS MONITOR PAGE
+    # PROCESS PAGE
     # =============================================================
 
     def show_process_page(self):
 
         self.main_page.hide()
-
         self.update_page.hide()
-
         self.process_page.show()
 
         self.title.setText(
@@ -650,8 +738,9 @@ class AlphaPopup(QWidget):
             "System resource usage"
         )
 
-        # Immediately refresh when opened.
         self.update_process_monitor()
+
+        self.update_size()
 
     # =============================================================
     # PROCESS MONITOR
@@ -659,18 +748,19 @@ class AlphaPopup(QWidget):
 
     def update_process_monitor(self):
 
-        # Don't waste resources updating hidden UI.
         if not self.process_page.isVisible():
             return
 
         try:
 
-            # -----------------------------------------------------
-            # SYSTEM
-            # -----------------------------------------------------
-
             info = (
-                ProcessMonitor.get_system_info()
+                self.application.process_monitor
+                .get_system_info()
+                if hasattr(
+                    self.application,
+                    "process_monitor",
+                )
+                else ProcessMonitor.get_system_info()
             )
 
             memory_used = (
@@ -702,35 +792,25 @@ class AlphaPopup(QWidget):
 
             cpu_lines = []
 
-            cpu_processes = (
-                ProcessMonitor.get_top_cpu(
-                    5
+            for process in ProcessMonitor.get_top_cpu(5):
+
+                name = str(
+                    process["name"]
                 )
-            )
 
-            for process in cpu_processes:
-
-                name = process["name"]
-
-                if len(name) > 18:
-                    name = name[:18]
+                if len(name) > 22:
+                    name = name[:19] + "..."
 
                 cpu_lines.append(
-                    f"{name:<18} "
+                    f"{name:<22} "
                     f"{process['cpu']:>6.1f}%"
                 )
 
-            if cpu_lines:
-
-                self.cpu_processes.setText(
-                    "\n".join(cpu_lines)
-                )
-
-            else:
-
-                self.cpu_processes.setText(
-                    "No process data"
-                )
+            self.cpu_processes.setText(
+                "\n".join(cpu_lines)
+                if cpu_lines
+                else "No process data"
+            )
 
             # -----------------------------------------------------
             # TOP MEMORY
@@ -738,18 +818,14 @@ class AlphaPopup(QWidget):
 
             memory_lines = []
 
-            memory_processes = (
-                ProcessMonitor.get_top_memory(
-                    5
+            for process in ProcessMonitor.get_top_memory(5):
+
+                name = str(
+                    process["name"]
                 )
-            )
 
-            for process in memory_processes:
-
-                name = process["name"]
-
-                if len(name) > 18:
-                    name = name[:18]
+                if len(name) > 22:
+                    name = name[:19] + "..."
 
                 memory_mb = (
                     process["memory"]
@@ -757,21 +833,15 @@ class AlphaPopup(QWidget):
                 )
 
                 memory_lines.append(
-                    f"{name:<18} "
+                    f"{name:<22} "
                     f"{memory_mb:>6.0f} MB"
                 )
 
-            if memory_lines:
-
-                self.memory_processes.setText(
-                    "\n".join(memory_lines)
-                )
-
-            else:
-
-                self.memory_processes.setText(
-                    "No process data"
-                )
+            self.memory_processes.setText(
+                "\n".join(memory_lines)
+                if memory_lines
+                else "No process data"
+            )
 
         except Exception as exc:
 
@@ -803,6 +873,8 @@ class AlphaPopup(QWidget):
             text
         )
 
+        self.update_size()
+
     # =============================================================
     # PACKAGES
     # =============================================================
@@ -814,6 +886,8 @@ class AlphaPopup(QWidget):
             self.package_info.setText(
                 "Your system is up to date."
             )
+
+            self.update_size()
 
             return
 
@@ -861,6 +935,8 @@ class AlphaPopup(QWidget):
             "\n".join(lines)
         )
 
+        self.update_size()
+
     # =============================================================
     # SHOW AT PET
     # =============================================================
@@ -871,6 +947,9 @@ class AlphaPopup(QWidget):
 
         if pet is None:
             return
+
+        # Make sure layout has its final size
+        self.update_size()
 
         pet_global = pet.mapToGlobal(
             QPoint(0, 0)
@@ -904,7 +983,7 @@ class AlphaPopup(QWidget):
         )
 
         # ---------------------------------------------------------
-        # USE RIGHT IF LEFT IS TOO SMALL
+        # FALL BACK TO RIGHT
         # ---------------------------------------------------------
 
         if x < available.left():
@@ -951,9 +1030,6 @@ class AlphaPopup(QWidget):
     # =============================================================
 
     def showEvent(self, event):
-
-        # Every time popup opens,
-        # return to the main page.
 
         self.show_main_page()
 
