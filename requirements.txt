@@ -8,3 +8,5 @@ PySide6_Essentials==6.11.2
 pytest==9.1.1
 PyYAML==6.0.3
 shiboken6==6.11.2
+psutil
+psutil

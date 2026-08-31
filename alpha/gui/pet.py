@@ -1,6 +1,10 @@
 from PySide6.QtCore import Qt, QPoint, Signal
 from PySide6.QtGui import QPixmap, QPainter
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import (
+    QWidget,
+    QMenu,
+    QApplication,
+)
 
 
 class AlphaPet(QWidget):
@@ -10,39 +14,63 @@ class AlphaPet(QWidget):
     def __init__(self, parent=None, image_path=None):
         super().__init__(parent)
 
-        # ---------------------------------------------------------
+        # =========================================================
+        # WINDOW IDENTITY
+        # =========================================================
+
+        self.setObjectName("AlphaPet")
+        self.setWindowTitle("AlphaPet")
+
+        # =========================================================
         # WINDOW
-        # ---------------------------------------------------------
+        # =========================================================
 
         self.setFixedSize(96, 96)
 
         self.setWindowFlags(
-            Qt.FramelessWindowHint
-            | Qt.Tool
-            | Qt.WindowStaysOnTopHint
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.Tool
+            | Qt.WindowType.WindowStaysOnTopHint
+            | Qt.WindowType.WindowDoesNotAcceptFocus
         )
 
+        # =========================================================
+        # TRANSPARENT PET
+        # =========================================================
+
         self.setAttribute(
-            Qt.WA_TranslucentBackground,
+            Qt.WidgetAttribute.WA_TranslucentBackground,
             True,
         )
 
         self.setAttribute(
-            Qt.WA_NoSystemBackground,
+            Qt.WidgetAttribute.WA_NoSystemBackground,
             True,
         )
+
+        self.setAttribute(
+            Qt.WidgetAttribute.WA_ShowWithoutActivating,
+            True,
+        )
+
+        # =========================================================
+        # MOUSE
+        # =========================================================
 
         self.setMouseTracking(True)
 
-        self.setCursor(Qt.OpenHandCursor)
+        self.setCursor(
+            Qt.CursorShape.OpenHandCursor
+        )
 
-        # ---------------------------------------------------------
+        # =========================================================
         # LOGO
-        # ---------------------------------------------------------
+        # =========================================================
 
         self.pixmap = QPixmap()
 
         if image_path:
+
             print(
                 f"[PET] Loading logo: {image_path}",
                 flush=True,
@@ -51,11 +79,14 @@ class AlphaPet(QWidget):
             self.pixmap = QPixmap(image_path)
 
             if self.pixmap.isNull():
+
                 print(
                     "[PET] ERROR: Could not load logo",
                     flush=True,
                 )
+
             else:
+
                 print(
                     "[PET] Logo loaded "
                     f"{self.pixmap.width()}x"
@@ -66,13 +97,13 @@ class AlphaPet(QWidget):
                 self.pixmap = self.pixmap.scaled(
                     88,
                     88,
-                    Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation,
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation,
                 )
 
-        # ---------------------------------------------------------
+        # =========================================================
         # CLICK / DRAG STATE
-        # ---------------------------------------------------------
+        # =========================================================
 
         self.mouse_down = False
         self.dragging = False
@@ -90,20 +121,23 @@ class AlphaPet(QWidget):
     # =============================================================
 
     def paintEvent(self, event):
+
         painter = QPainter(self)
 
         painter.setRenderHint(
-            QPainter.Antialiasing,
+            QPainter.RenderHint.Antialiasing,
             True,
         )
 
         painter.setRenderHint(
-            QPainter.SmoothPixmapTransform,
+            QPainter.RenderHint.SmoothPixmapTransform,
             True,
         )
 
-        # Completely transparent background.
-        # Only the actual PNG is drawn.
+        # ---------------------------------------------------------
+        # COMPLETELY TRANSPARENT BACKGROUND
+        # ---------------------------------------------------------
+
         if not self.pixmap.isNull():
 
             x = (
@@ -125,34 +159,118 @@ class AlphaPet(QWidget):
         painter.end()
 
     # =============================================================
+    # RIGHT CLICK MENU
+    # =============================================================
+
+    def show_context_menu(self, global_position):
+
+        print(
+            "[PET] Right-click menu",
+            flush=True,
+        )
+
+        menu = QMenu()
+
+        # ---------------------------------------------------------
+        # MENU STYLE
+        # ---------------------------------------------------------
+
+        menu.setWindowFlag(
+            Qt.WindowType.FramelessWindowHint,
+            True,
+        )
+
+        menu.setAttribute(
+            Qt.WidgetAttribute.WA_TranslucentBackground,
+            True,
+        )
+
+        # ---------------------------------------------------------
+        # ACTIONS
+        # ---------------------------------------------------------
+
+        close_action = menu.addAction(
+            "Close Alpha Assistant"
+        )
+
+        # ---------------------------------------------------------
+        # SHOW MENU
+        # ---------------------------------------------------------
+
+        action = menu.exec(
+            global_position
+        )
+
+        # ---------------------------------------------------------
+        # CLOSE ALPHA
+        # ---------------------------------------------------------
+
+        if action == close_action:
+
+            print(
+                "[PET] Closing Alpha Assistant",
+                flush=True,
+            )
+
+            QApplication.quit()
+
+    # =============================================================
     # MOUSE PRESS
     # =============================================================
 
     def mousePressEvent(self, event):
 
+        button = event.button()
+
+        global_position = (
+            event.globalPosition().toPoint()
+        )
+
+        local_position = (
+            event.position().toPoint()
+        )
+
         print(
             "[PET] PRESS",
-            f"button={event.button()}",
-            f"global={event.globalPosition().toPoint()}",
-            f"local={event.position().toPoint()}",
+            f"button={button}",
+            f"global={global_position}",
+            f"local={local_position}",
             flush=True,
         )
 
-        if event.button() == Qt.LeftButton:
+        # ---------------------------------------------------------
+        # RIGHT CLICK
+        # ---------------------------------------------------------
+
+        if button == Qt.MouseButton.RightButton:
+
+            self.show_context_menu(
+                global_position
+            )
+
+            event.accept()
+
+            return
+
+        # ---------------------------------------------------------
+        # LEFT CLICK
+        # ---------------------------------------------------------
+
+        if button == Qt.MouseButton.LeftButton:
 
             self.mouse_down = True
             self.dragging = False
 
             self.press_global = (
-                event.globalPosition().toPoint()
+                global_position
             )
 
             self.press_local = (
-                event.position().toPoint()
+                local_position
             )
 
             self.setCursor(
-                Qt.ClosedHandCursor
+                Qt.CursorShape.ClosedHandCursor
             )
 
             print(
@@ -161,6 +279,7 @@ class AlphaPet(QWidget):
             )
 
             event.accept()
+
             return
 
         super().mousePressEvent(event)
@@ -183,48 +302,27 @@ class AlphaPet(QWidget):
             - self.press_global
         )
 
-        print(
-            "[PET] MOVE",
-            f"global={current_global}",
-            f"delta={delta}",
-            flush=True,
-        )
-
         # ---------------------------------------------------------
-        # DON'T START DRAGGING FOR A SIMPLE CLICK
+        # DRAG THRESHOLD
         # ---------------------------------------------------------
 
         if not self.dragging:
 
             if delta.manhattanLength() < 8:
 
-                print(
-                    "[PET] movement below threshold",
-                    flush=True,
-                )
-
                 event.accept()
+
                 return
 
             print(
-                "[PET] >>> STARTING NATIVE WINDOW MOVE <<<",
+                "[PET] >>> STARTING WINDOW MOVE <<<",
                 flush=True,
             )
 
             self.dragging = True
 
             # -----------------------------------------------------
-            # WAYLAND FIX
-            #
-            # DO NOT USE:
-            #
-            # self.move(...)
-            #
-            # Wayland does not allow an application to arbitrarily
-            # reposition a top-level window.
-            #
-            # startSystemMove() asks the compositor to perform the
-            # actual window movement.
+            # WAYLAND
             # -----------------------------------------------------
 
             window = self.windowHandle()
@@ -259,6 +357,7 @@ class AlphaPet(QWidget):
                 )
 
             event.accept()
+
             return
 
         event.accept()
@@ -269,15 +368,7 @@ class AlphaPet(QWidget):
 
     def mouseReleaseEvent(self, event):
 
-        print(
-            "[PET] RELEASE",
-            f"button={event.button()}",
-            f"global={event.globalPosition().toPoint()}",
-            f"dragging={self.dragging}",
-            flush=True,
-        )
-
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
 
             was_dragging = self.dragging
 
@@ -285,11 +376,11 @@ class AlphaPet(QWidget):
             self.dragging = False
 
             self.setCursor(
-                Qt.OpenHandCursor
+                Qt.CursorShape.OpenHandCursor
             )
 
             # -----------------------------------------------------
-            # DRAG FINISHED
+            # DRAG
             # -----------------------------------------------------
 
             if was_dragging:
@@ -303,7 +394,7 @@ class AlphaPet(QWidget):
                 self.moved.emit()
 
             # -----------------------------------------------------
-            # NORMAL CLICK
+            # CLICK
             # -----------------------------------------------------
 
             else:
@@ -316,6 +407,7 @@ class AlphaPet(QWidget):
                 self.clicked.emit()
 
             event.accept()
+
             return
 
         super().mouseReleaseEvent(event)
